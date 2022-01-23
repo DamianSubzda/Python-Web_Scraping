@@ -21,12 +21,12 @@ def WebScraper():
     global idOfItems
     idOfItems = 0
 
-    #ParsePage(1)
-
+    ParsePage(1)
+    '''
     for i in range(1, 20):
         ParsePage(i)
         print("i: " + str(i))
-
+'''
     '''
     #Przechodzi po wszystkich stronach
     x = True

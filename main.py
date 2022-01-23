@@ -3,6 +3,7 @@ import threading
 from tkinter import *
 
 import DataBaseConnection
+import window
 
 class thread(threading.Thread):
     def __init__(self, thread_ID):
@@ -55,7 +56,8 @@ def ShowFirstSkreen():
     buttonRefresh.bind("<ButtonRelease>", Refresh)
     buttonAccept.bind("<ButtonRelease>", Accept)
 
-ShowFirstSkreen()
+#ShowFirstSkreen()
+window.window()
 
 desktopApp.mainloop()
 
