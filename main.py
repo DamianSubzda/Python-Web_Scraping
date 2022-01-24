@@ -1,11 +1,15 @@
-# Damian Subzda WCY19IJ3S1
+# Damian Subzda
+# WCY19IJ3S1
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 import windowM
-from thread import thread
+from thread import Thread
 
-thread1 = thread()
+thread1 = Thread()
 thread1.start()
+
+def close():
+    app.exec_()
 
 if __name__ == "__main__":
     import sys
@@ -14,7 +18,9 @@ if __name__ == "__main__":
     ui = windowM.Ui_MainWindow()
     ui.setupUi(MainWindow)
     MainWindow.show()
-    sys.exit(app.exec_())
+    sys.exit(close())
+
+
 
 
 
