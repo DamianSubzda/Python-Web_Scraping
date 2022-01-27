@@ -1,17 +1,36 @@
 # Damian Subzda
 # WCY19IJ3S1
+import datetime
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+import DataBaseConnection
+import sys
 
+class Ui_MainWindow():
 
-class Ui_MainWindow(object):
+    def __init__(self):
+        pass
 
-    def setupUi(self, MainWindow):
+    def start(self):
+        app = QtWidgets.QApplication(sys.argv)
+        MainWindow = QtWidgets.QMainWindow()
+        ui = Ui_MainWindow()
+        ui.setup(MainWindow)
+        MainWindow.show()
+        sys.exit(app.exec_())
+
+    def setup(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(805, 571)
         MainWindow.setAutoFillBackground(False)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
+
+        self.pushButton_Refresh = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_Refresh.setGeometry(QtCore.QRect(630, 50, 101, 31))
+        self.pushButton_Refresh.setObjectName("pushButton_Refresh")
+        self.pushButton_Refresh.clicked.connect(self.refreshClick)
+
         self.pushButton_Search = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_Search.setGeometry(QtCore.QRect(630, 110, 101, 31))
         self.pushButton_Search.setObjectName("pushButton_Search")
@@ -27,9 +46,16 @@ class Ui_MainWindow(object):
         self.pushButton_Copy = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_Copy.setGeometry(QtCore.QRect(630, 490, 131, 31))
         self.pushButton_Copy.setObjectName("pushButton_Copy")
+
+        font = QtGui.QFont()
+        font.setPointSize(15)
+
         self.label1 = QtWidgets.QLabel(self.centralwidget)
-        self.label1.setGeometry(QtCore.QRect(610, 10, 131, 51))
+        self.label1.setGeometry(QtCore.QRect(510, 10, 231, 71))
+        self.label1.setFont(font)
         self.label1.setObjectName("label1")
+        self.label1.adjustSize()
+        
         self.label3 = QtWidgets.QLabel(self.centralwidget)
         self.label3.setGeometry(QtCore.QRect(170, 160, 191, 31))
         self.label3.setObjectName("label3")
@@ -44,16 +70,30 @@ class Ui_MainWindow(object):
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
 
+        self.actionRefresh = QtWidgets.QAction(MainWindow)
+        self.actionRefresh.setObjectName("actionRefresh")
+
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+    def refreshClick(self):
+        self.label1.setText(f"Number of elements:{DataBaseConnection.DataBaseConnector.idOfItems}")
+        self.label1.adjustSize()
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.pushButton_Search.setText(_translate("MainWindow", "Search"))
         self.pushButton_Copy.setText(_translate("MainWindow", "Copy To Clipboard"))
-        self.label1.setText(_translate("MainWindow", "Number of elements:"))
+        self.pushButton_Refresh.setText(_translate("MainWindow", "Refresh"))
+        self.label1.setText(f"Number of elements:{DataBaseConnection.DataBaseConnector.idOfItems}")
+        self.label1.adjustSize()
         self.label3.setText(_translate("MainWindow", "Sorted by lowest price:"))
         self.pushButton_Open.setText(_translate("MainWindow", "Open in browser"))
         self.label2.setText(_translate("MainWindow", "Search in database:"))
 
+    def setLabel1(self, MainWindow, nr):
+        _translate = QtCore.QCoreApplication.translate
+        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        self.label1.setText(f"Number of elements:{DataBaseConnection.DataBaseConnector.idOfItems}")
+        self.label1.adjustSize()

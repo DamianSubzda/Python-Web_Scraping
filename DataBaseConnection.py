@@ -1,13 +1,18 @@
 # Damian Subzda
 # WCY19IJ3S1
-
-
+from Demos.win32gui_menu import MainWindow
+from PyQt5.uic.properties import QtWidgets
 from bs4 import BeautifulSoup
 from requests import get
 import sqlite3
 from sys import argv
 
 class DataBaseConnector():
+
+    idOfItems = 0
+
+    def __init__(self, idOfItems):
+        self.idOfItems = idOfItems
 
     def haveWant(self, shortcut):
         shortcutNum = shortcut.find_all('div', class_="community_result")
@@ -30,7 +35,6 @@ class DataBaseConnector():
         return have, want
 
     def ParsePage(self, nextPage):
-        global idOfItems
         page = get(f'{URL}&page={nextPage}')
         bs = BeautifulSoup(page.content, "html.parser")
         if bs.find('h1').get_text() == "404! Oh no!":
@@ -38,8 +42,7 @@ class DataBaseConnector():
         else:
             for shortcut in bs.find_all('tr', class_="shortcut_navigable"):
 
-                idOfItems = idOfItems + 1
-                print(idOfItems)
+                self.idOfItems = self.idOfItems + 1
                 title = shortcut.find('a', class_="item_description_title").get_text()  # [:-10]
                 labelShortcut = shortcut.find('p', class_="hide_mobile label_and_cat")
                 label = labelShortcut.find('a').get_text()
@@ -52,9 +55,8 @@ class DataBaseConnector():
                 price = shortcut.find('span', class_="price").get_text()
                 price, currency = self.splitCurrency(self, price)
                 cursor.execute('INSERT INTO dane VALUES (?, ?,?,?,?,?,?,?)',
-                               (idOfItems, title, price, currency, label, star_rating, have, want))
+                               (self.idOfItems, title, price, currency, label, star_rating, have, want))
                 conn.commit()
-                #break
         return True
 
     def WebScraper(self):
@@ -69,9 +71,6 @@ class DataBaseConnector():
             quit()
 
         cursor.execute('''DELETE FROM dane''')
-
-        global idOfItems
-        idOfItems = 0
 
         #ParsePage(1)
 
@@ -145,10 +144,8 @@ class DataBaseConnector():
 
         return price, currency
 
-    idOfItems = 0
-
     def GetAmountOfItems(self):
-        return idOfItems
+        return self.idOfItems
 
 #Po nazwie porówywanie
 #Patrzenie czy się zmieniło w czasie (od ostatniego czasu)
