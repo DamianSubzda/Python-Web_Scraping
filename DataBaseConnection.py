@@ -7,12 +7,13 @@ from requests import get
 import sqlite3
 from sys import argv
 
-class DataBaseConnector():
 
+class DataBaseConnector():
     idOfItems = 0
 
     def __init__(self, idOfItems):
         self.idOfItems = idOfItems
+        self.URL = 'https://www.discogs.com/sell/list?sort=title%2Casc&limit=25'
 
     def haveWant(self, shortcut):
         shortcutNum = shortcut.find_all('div', class_="community_result")
@@ -72,20 +73,13 @@ class DataBaseConnector():
 
         cursor.execute('''DELETE FROM dane''')
 
-        #ParsePage(1)
-
-        for i in range(1, 20):
-            self.ParsePage(self, i)
-            print("i: " + str(i))
-
-        '''
-        #Przechodzi po wszystkich stronach
+        # Przechodzi po wszystkich stronach
         x = True
         i = 1
         while x == True:
-            x = ParsePage(i)
-            i +=1
-        '''
+            x = self.ParsePage(self, i)
+            i += 1
+
         conn.close()
 
     def splitCurrency(self, price):
@@ -144,8 +138,15 @@ class DataBaseConnector():
 
         return price, currency
 
-    def GetAmountOfItems(self):
-        return self.idOfItems
+    def getRecords(self, name):
+        conn = sqlite3.connect("data.db")
+        cursor = conn.cursor()
 
-#Po nazwie porówywanie
-#Patrzenie czy się zmieniło w czasie (od ostatniego czasu)
+        cursor.execute("SELECT * FROM dane where title like ? ", ('%'+name+'%',))
+        rows = cursor.fetchall()
+
+        conn.close()
+        return rows
+
+# Po nazwie porówywanie
+# Patrzenie czy się zmieniło w czasie (od ostatniego czasu)
