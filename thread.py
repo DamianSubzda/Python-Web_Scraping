@@ -11,7 +11,4 @@ class Thread(threading.Thread):
 
     def run(self):
         DataBaseConnection.DataBaseConnector.WebScraper(DataBaseConnection.DataBaseConnector)
-        pass
 
-    def stop(self):
-        self.join()

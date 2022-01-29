@@ -7,20 +7,16 @@ import webbrowser
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QListWidgetItem, QApplication
-from prompt_toolkit.clipboard import pyperclip
 
 import DataBaseConnection
-import sys
 import info
+import element
 
 class Ui_MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self, parent=None):
         super(Ui_MainWindow, self).__init__(parent)
         self.popups = []
-
-    def start(self):
-        pass
 
     def setup(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -39,14 +35,14 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.pushButton_Search.setObjectName("pushButton_Search")
         self.pushButton_Search.clicked.connect(self.searchClick)
 
+        self.pushButton_Add = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_Add.setGeometry(QtCore.QRect(630, 370, 50, 31))
+        self.pushButton_Add.setObjectName("pushButton_Add")
+        #self.pushButton_Add.clicked.connect(self.searchClick)
+
         self.lineEdit = QtWidgets.QLineEdit(self.centralwidget)
         self.lineEdit.setGeometry(QtCore.QRect(170, 110, 441, 31))
         self.lineEdit.setObjectName("lineEdit")
-
-
-        #self.comboBox_Currency = QtWidgets.QComboBox(self.centralwidget)
-        #self.comboBox_Currency.setGeometry(QtCore.QRect(20, 20, 121, 31))
-        #self.comboBox_Currency.setObjectName("comboBox_Currency")
 
         self.listWidget = QtWidgets.QListWidget(self.centralwidget)
         self.listWidget.setGeometry(QtCore.QRect(170, 200, 441, 321))
@@ -99,10 +95,18 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def showInfo(self):
-        popWin = info.Ui_Info()
-        popWin.show()
-        self.popups.append(popWin)
 
+        x = self.listWidget.selectedItems()
+        if len(x)==0:
+            pass
+        else:
+            for y in x:
+                x = y.text()
+            id = int(self.getID(x))
+            row = DataBaseConnection.DataBaseConnector.getRecordByID(DataBaseConnection.DataBaseConnector, id)
+            popWin = info.Ui_Info(row)
+            popWin.show()
+            self.popups.append(popWin)
 
     def refreshClick(self):
         self.label1.setText(f"Number of elements:{DataBaseConnection.DataBaseConnector.idOfItems}")
@@ -113,10 +117,8 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         temp = self.lineEdit.text()
         if temp != "":
             rows = DataBaseConnection.DataBaseConnector.getRecords(DataBaseConnection.DataBaseConnector, temp)
-            #print(rows)
             for row in rows:
                 temp2 = str(row[0])+ ": Price:  " + str(row[2]) + " " + str(row[3]) + "\tTitle:  " + str(row[1])
-                print(temp2)
                 self.listWidget.addItem(temp2)
 
         self.lineEdit.setText("")
@@ -175,5 +177,6 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.label1.adjustSize()
         self.label3.setText(_translate("MainWindow", "List of elements :"))
         self.pushButton_Open.setText(_translate("MainWindow", "Open in browser"))
+        self.pushButton_Add.setText(_translate("MainWindow", "Add"))
         self.label2.setText(_translate("MainWindow", "Search in database:"))
 
