@@ -1,7 +1,7 @@
 # Damian Subzda
 # WCY19IJ3S1
-from Demos.win32gui_menu import MainWindow
-from PyQt5.uic.properties import QtWidgets
+
+
 from bs4 import BeautifulSoup
 from requests import get
 import sqlite3
@@ -45,6 +45,11 @@ class DataBaseConnector():
 
                 self.idOfItems = self.idOfItems + 1
                 title = shortcut.find('a', class_="item_description_title").get_text()  # [:-10]
+                title = title.replace('\t\t\t', ' ')
+                title = title.replace('\t\t', ' ')
+                title = title.replace('\t', ' ')
+                title = title.replace('   ', ' ')
+                title = title.replace('  ', ' ')
                 labelShortcut = shortcut.find('p', class_="hide_mobile label_and_cat")
                 label = labelShortcut.find('a').get_text()
                 shipFromShortcut = shortcut.find_all('li')
@@ -55,8 +60,9 @@ class DataBaseConnector():
                 have, want = self.haveWant(self, shortcut)
                 price = shortcut.find('span', class_="price").get_text()
                 price, currency = self.splitCurrency(self, price)
-                cursor.execute('INSERT INTO dane VALUES (?, ?,?,?,?,?,?,?)',
-                               (self.idOfItems, title, price, currency, label, star_rating, have, want))
+                href = shortcut.find('a', class_="item_description_title").get('href')
+                cursor.execute('INSERT INTO dane VALUES (?, ?,?,?,?,?,?,?, ?)',
+                               (self.idOfItems, title, price, currency, label, star_rating, have, want, href))
                 conn.commit()
         return True
 
@@ -68,7 +74,7 @@ class DataBaseConnector():
 
         if len(argv) > 1:
             cursor.execute(
-                '''CREATE TABLE dane (id INTEGER,title TEXT,price REAL,currency TEXT, label TEXT, star_rating TEXT, have INTEGER, want INTEGER )''')
+                '''CREATE TABLE dane (id INTEGER,title TEXT,price REAL,currency TEXT, label TEXT, star_rating TEXT, have INTEGER, want INTEGER, href TEXT)''')
             quit()
 
         cursor.execute('''DELETE FROM dane''')
@@ -148,5 +154,14 @@ class DataBaseConnector():
         conn.close()
         return rows
 
-# Po nazwie porówywanie
-# Patrzenie czy się zmieniło w czasie (od ostatniego czasu)
+    def getRecordByID(self, id):
+
+        conn = sqlite3.connect("data.db")
+        cursor = conn.cursor()
+
+        cursor.execute("SELECT * FROM dane where id = ?", (id, ))
+        row = cursor.fetchall()
+
+        conn.close()
+        return row
+

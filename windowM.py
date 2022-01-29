@@ -2,7 +2,8 @@
 # WCY19IJ3S1
 
 #TODO Możliwość dodania dwóch rzeczy do porównania (dodanie w osobnym okienku)
-
+#TODO Dodanie do listy wszystkich wyszukanych aby móc wyjąć z niej href'a
+import webbrowser
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QListWidgetItem
@@ -73,6 +74,9 @@ class Ui_MainWindow():
         self.pushButton_Open = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_Open.setGeometry(QtCore.QRect(630, 450, 131, 31))
         self.pushButton_Open.setObjectName("pushButton_Open")
+        self.pushButton_Open.clicked.connect(self.openBrowser)
+
+
         self.label2 = QtWidgets.QLabel(self.centralwidget)
         self.label2.setGeometry(QtCore.QRect(170, 70, 191, 31))
         self.label2.setObjectName("label2")
@@ -98,7 +102,7 @@ class Ui_MainWindow():
             rows = DataBaseConnection.DataBaseConnector.getRecords(DataBaseConnection.DataBaseConnector, temp)
             #print(rows)
             for row in rows:
-                temp2 = "Price: " + str(row[2]) + " " + str(row[3]) + "\tTitle: " + str(row[1])
+                temp2 = str(row[0])+ ": Price: " + str(row[2]) + " " + str(row[3]) + "\tTitle: " + str(row[1])
                 print(temp2)
                 self.listWidget.addItem(temp2)
 
@@ -107,6 +111,8 @@ class Ui_MainWindow():
     def delateItemsFromList(self):
         self.listWidget.clear()
 
+    def openBrowser(self):
+        webbrowser.open("https://google.com")
 
 
 
