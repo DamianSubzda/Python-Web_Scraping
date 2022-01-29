@@ -6,7 +6,7 @@
 import webbrowser
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QListWidgetItem, QApplication
+from PyQt5.QtWidgets import QListWidgetItem, QApplication, QMessageBox
 
 import DataBaseConnection
 import info
@@ -19,6 +19,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.popups = []
 
     def setup(self, MainWindow):
+        font = QtGui.QFont()
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(805, 571)
         MainWindow.setAutoFillBackground(False)
@@ -38,7 +39,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.pushButton_Add = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_Add.setGeometry(QtCore.QRect(630, 370, 50, 31))
         self.pushButton_Add.setObjectName("pushButton_Add")
-        #self.pushButton_Add.clicked.connect(self.searchClick)
+        self.pushButton_Add.clicked.connect(self.addElement)
 
         self.lineEdit = QtWidgets.QLineEdit(self.centralwidget)
         self.lineEdit.setGeometry(QtCore.QRect(170, 110, 441, 31))
@@ -47,6 +48,20 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.listWidget = QtWidgets.QListWidget(self.centralwidget)
         self.listWidget.setGeometry(QtCore.QRect(170, 200, 441, 321))
         self.listWidget.setObjectName("listWidget")
+
+        self.label4 = QtWidgets.QLabel(self.centralwidget)
+        self.label4.setGeometry(QtCore.QRect(30, 170, 191, 31))
+        self.label4.setFont(font)
+        self.label4.setObjectName("label4")
+
+        self.listWidgetElement = QtWidgets.QListWidget(self.centralwidget)
+        self.listWidgetElement.setGeometry(QtCore.QRect(30, 200, 100, 48+24-3))
+        self.listWidgetElement.setObjectName("listWidgetElement")
+
+        self.pushButton_Remove = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_Remove.setGeometry(QtCore.QRect(30, 255+24-3, 70, 31))
+        self.pushButton_Remove.setObjectName("pushButton_Remove")
+        self.pushButton_Remove.clicked.connect(self.delateElement)
 
         self.pushButton_Copy = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_Copy.setGeometry(QtCore.QRect(630, 490, 131, 31))
@@ -58,7 +73,6 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.pushButton_Info.setObjectName("pushButton_Info")
         self.pushButton_Info.clicked.connect(self.showInfo)
 
-        font = QtGui.QFont()
         font.setPointSize(15)
 
         self.label1 = QtWidgets.QLabel(self.centralwidget)
@@ -77,7 +91,6 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.pushButton_Open.setObjectName("pushButton_Open")
         self.pushButton_Open.clicked.connect(self.openBrowser)
 
-
         self.label2 = QtWidgets.QLabel(self.centralwidget)
         font.setPointSize(10)
         self.label2.setFont(font)
@@ -93,6 +106,24 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+    def addElement(self):
+        #self.listWidgetElement.addItem("Hello")
+        x = self.listWidget.selectedItems()
+        if self.listWidgetElement.count() != 2:
+            if len(x) == 0:
+                pass
+            else:
+                for y in x:
+                    x = y.text()
+                id = int(self.getID(x))
+                row = DataBaseConnection.DataBaseConnector.getRecordByID(DataBaseConnection.DataBaseConnector, id)
+                temp2 = "ID: " + str(row[0]) + "\tTitle:  " + str(row[1])
+                self.listWidgetElement.addItem(temp2)
+        else:
+            QMessageBox.about(self, "Error", "Max 2 elements!")
+
+        #TODO Zrobić żeby nie można było dodać duplikatów
 
     def showInfo(self):
 
@@ -120,7 +151,6 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             for row in rows:
                 temp2 = str(row[0])+ ": Price:  " + str(row[2]) + " " + str(row[3]) + "\tTitle:  " + str(row[1])
                 self.listWidget.addItem(temp2)
-
         self.lineEdit.setText("")
 
     def copyToClipboard(self):
@@ -153,6 +183,10 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
     def delateItemsFromList(self):
         self.listWidget.clear()
 
+    def delateElement(self):
+        for item in self.listWidgetElement.selectedItems():
+            self.listWidgetElement.takeItem(self.listWidgetElement.row(item))
+
     def openBrowser(self):
         x = self.listWidget.selectedItems()
         if len(x) == 0:
@@ -173,10 +207,12 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.pushButton_Copy.setText(_translate("MainWindow", "Copy To Clipboard"))
         self.pushButton_Refresh.setText(_translate("MainWindow", "Refresh"))
         self.pushButton_Info.setText(_translate("MainWindow", "Show more info"))
-        self.label1.setText(f"Number of elements:{DataBaseConnection.DataBaseConnector.idOfItems}")
+        self.label1.setText(f"Number of elements: {DataBaseConnection.DataBaseConnector.idOfItems}")
         self.label1.adjustSize()
+        self.label4.setText(_translate("MainWindow", "Added elements :"))
         self.label3.setText(_translate("MainWindow", "List of elements :"))
         self.pushButton_Open.setText(_translate("MainWindow", "Open in browser"))
         self.pushButton_Add.setText(_translate("MainWindow", "Add"))
+        self.pushButton_Remove.setText(_translate("MainWindow", "Remove"))
         self.label2.setText(_translate("MainWindow", "Search in database:"))
 

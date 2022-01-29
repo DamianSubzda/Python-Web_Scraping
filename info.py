@@ -8,6 +8,8 @@ class Ui_Info(QtWidgets.QMainWindow):
         self.setLabels(row)
         self.currencyComboBox = "$"
         self.priceComboBox = row[2]
+        self.element1 = None
+        self.element2 = None
 
     def setupUi(self, Info):
         Info.setObjectName("Info")
@@ -71,7 +73,7 @@ class Ui_Info(QtWidgets.QMainWindow):
         self.retranslateUi(Info)
         QtCore.QMetaObject.connectSlotsByName(Info)
 
-    def setCurrency(self): #return
+    def setCurrency(self):
         currency = self.currencyComboBox
         price = self.priceComboBox
         if currency == '$':
