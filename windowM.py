@@ -11,19 +11,16 @@ from prompt_toolkit.clipboard import pyperclip
 
 import DataBaseConnection
 import sys
+import info
 
-class Ui_MainWindow():
+class Ui_MainWindow(QtWidgets.QMainWindow):
 
-    def __init__(self):
-        pass
+    def __init__(self, parent=None):
+        super(Ui_MainWindow, self).__init__(parent)
+        self.popups = []
 
     def start(self):
-        app = QtWidgets.QApplication(sys.argv)
-        MainWindow = QtWidgets.QMainWindow()
-        ui = Ui_MainWindow()
-        ui.setup(MainWindow)
-        MainWindow.show()
-        sys.exit(app.exec_())
+        pass
 
     def setup(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -102,7 +99,10 @@ class Ui_MainWindow():
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def showInfo(self):
-        pass
+        popWin = info.Ui_Info()
+        popWin.show()
+        self.popups.append(popWin)
+
 
     def refreshClick(self):
         self.label1.setText(f"Number of elements:{DataBaseConnection.DataBaseConnector.idOfItems}")
