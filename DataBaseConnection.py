@@ -160,7 +160,8 @@ class DataBaseConnector():
         cursor = conn.cursor()
 
         cursor.execute("SELECT * FROM dane where id = ?", (id, ))
-        row = cursor.fetchall()
+        rows = cursor.fetchall()
+        row = rows[0]
 
         conn.close()
         return row

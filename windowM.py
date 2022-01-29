@@ -2,11 +2,12 @@
 # WCY19IJ3S1
 
 #TODO Możliwość dodania dwóch rzeczy do porównania (dodanie w osobnym okienku)
-#TODO Dodanie do listy wszystkich wyszukanych aby móc wyjąć z niej href'a
+
 import webbrowser
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QListWidgetItem
+from PyQt5.QtWidgets import QListWidgetItem, QApplication
+from prompt_toolkit.clipboard import pyperclip
 
 import DataBaseConnection
 import sys
@@ -46,18 +47,23 @@ class Ui_MainWindow():
         self.lineEdit.setObjectName("lineEdit")
 
 
-        self.comboBox_Currency = QtWidgets.QComboBox(self.centralwidget)
-        self.comboBox_Currency.setGeometry(QtCore.QRect(20, 20, 121, 31))
-        self.comboBox_Currency.setObjectName("comboBox_Currency")
+        #self.comboBox_Currency = QtWidgets.QComboBox(self.centralwidget)
+        #self.comboBox_Currency.setGeometry(QtCore.QRect(20, 20, 121, 31))
+        #self.comboBox_Currency.setObjectName("comboBox_Currency")
 
         self.listWidget = QtWidgets.QListWidget(self.centralwidget)
         self.listWidget.setGeometry(QtCore.QRect(170, 200, 441, 321))
         self.listWidget.setObjectName("listWidget")
 
-
         self.pushButton_Copy = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_Copy.setGeometry(QtCore.QRect(630, 490, 131, 31))
         self.pushButton_Copy.setObjectName("pushButton_Copy")
+        self.pushButton_Copy.clicked.connect(self.copyToClipboard)
+
+        self.pushButton_Info = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_Info.setGeometry(QtCore.QRect(630, 410, 131, 31))
+        self.pushButton_Info.setObjectName("pushButton_Info")
+        self.pushButton_Info.clicked.connect(self.showInfo)
 
         font = QtGui.QFont()
         font.setPointSize(15)
@@ -67,9 +73,11 @@ class Ui_MainWindow():
         self.label1.setFont(font)
         self.label1.setObjectName("label1")
         self.label1.adjustSize()
-        
+
+        font.setPointSize(10)
         self.label3 = QtWidgets.QLabel(self.centralwidget)
         self.label3.setGeometry(QtCore.QRect(170, 160, 191, 31))
+        self.label3.setFont(font)
         self.label3.setObjectName("label3")
         self.pushButton_Open = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_Open.setGeometry(QtCore.QRect(630, 450, 131, 31))
@@ -78,6 +86,8 @@ class Ui_MainWindow():
 
 
         self.label2 = QtWidgets.QLabel(self.centralwidget)
+        font.setPointSize(10)
+        self.label2.setFont(font)
         self.label2.setGeometry(QtCore.QRect(170, 70, 191, 31))
         self.label2.setObjectName("label2")
         MainWindow.setCentralWidget(self.centralwidget)
@@ -91,6 +101,9 @@ class Ui_MainWindow():
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+    def showInfo(self):
+        pass
+
     def refreshClick(self):
         self.label1.setText(f"Number of elements:{DataBaseConnection.DataBaseConnector.idOfItems}")
         self.label1.adjustSize()
@@ -102,29 +115,65 @@ class Ui_MainWindow():
             rows = DataBaseConnection.DataBaseConnector.getRecords(DataBaseConnection.DataBaseConnector, temp)
             #print(rows)
             for row in rows:
-                temp2 = str(row[0])+ ": Price: " + str(row[2]) + " " + str(row[3]) + "\tTitle: " + str(row[1])
+                temp2 = str(row[0])+ ": Price:  " + str(row[2]) + " " + str(row[3]) + "\tTitle:  " + str(row[1])
                 print(temp2)
                 self.listWidget.addItem(temp2)
 
         self.lineEdit.setText("")
 
+    def copyToClipboard(self):
+
+        x = self.listWidget.selectedItems()
+        if len(x)==0:
+            pass
+        else:
+            for y in x:
+                x = y.text()
+            id = int(self.getID(x))
+            row = DataBaseConnection.DataBaseConnector.getRecordByID(DataBaseConnection.DataBaseConnector, id)
+            href = row[8]
+            clipboard = QApplication.clipboard()
+            clipboard.clear(mode=clipboard.Clipboard)
+            clipboard.setText(f"https://www.discogs.com{href}", mode=clipboard.Clipboard)
+
+    def getID(self, text):
+        if text[1] == ':':
+            return text[:1]
+        elif text[2] == ':':
+            return text[:2]
+        elif text[3] == ':':
+            return text[:3]
+        elif text[4] == ':':
+            return text[:4]
+        else:
+            return 0
+
     def delateItemsFromList(self):
         self.listWidget.clear()
 
     def openBrowser(self):
-        webbrowser.open("https://google.com")
+        x = self.listWidget.selectedItems()
+        if len(x) == 0:
+            pass
+        else:
+            for y in x:
+                x = y.text()
+            id = int(self.getID(x))
+            row = DataBaseConnection.DataBaseConnector.getRecordByID(DataBaseConnection.DataBaseConnector, id)
+            href = row[8]
 
-
+            webbrowser.open(f"https://www.discogs.com{href}")
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Comparison engine"))
         self.pushButton_Search.setText(_translate("MainWindow", "Search"))
         self.pushButton_Copy.setText(_translate("MainWindow", "Copy To Clipboard"))
         self.pushButton_Refresh.setText(_translate("MainWindow", "Refresh"))
+        self.pushButton_Info.setText(_translate("MainWindow", "Show more info"))
         self.label1.setText(f"Number of elements:{DataBaseConnection.DataBaseConnector.idOfItems}")
         self.label1.adjustSize()
-        self.label3.setText(_translate("MainWindow", "Sorted by lowest price:"))
+        self.label3.setText(_translate("MainWindow", "List of elements :"))
         self.pushButton_Open.setText(_translate("MainWindow", "Open in browser"))
         self.label2.setText(_translate("MainWindow", "Search in database:"))
 
