@@ -6,6 +6,9 @@ import windowM
 
 class Ui_Comparison(QtWidgets.QMainWindow):
 
+    price1 = 0
+    price2 = 0
+
     def __init__(self, parent=None):
         super(Ui_Comparison, self).__init__(parent)
         self.setupUi(self)
@@ -102,7 +105,7 @@ class Ui_Comparison(QtWidgets.QMainWindow):
         font = self.comboBox.font()
         font.setPointSize(12)
         self.comboBox.setFont(font)
-        self.comboBox.currentTextChanged.connect(self.setCurrency)
+        self.comboBox.currentTextChanged.connect(self.changeCurrency)
 
         self.label_title_1 = QtWidgets.QLabel(Comparison)
         self.label_title_1.setGeometry(QtCore.QRect(-2, 0, 261, 75))
@@ -113,10 +116,6 @@ class Ui_Comparison(QtWidgets.QMainWindow):
         self.line_9.setFrameShape(QtWidgets.QFrame.HLine)
         self.line_9.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line_9.setObjectName("line_9")
-        self.label_1 = QtWidgets.QLabel(Comparison)
-        self.label_1.setGeometry(QtCore.QRect(260, 540, 131, 41))
-        self.label_1.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_1.setObjectName("label_1")
         self.label_title_2 = QtWidgets.QLabel(Comparison)
         self.label_title_2.setGeometry(QtCore.QRect(390, 0, 241, 75))
         self.label_title_2.setAlignment(QtCore.Qt.AlignCenter)
@@ -169,24 +168,42 @@ class Ui_Comparison(QtWidgets.QMainWindow):
         self.label_priceIn_2.setGeometry(QtCore.QRect(390, 450, 241, 75))
         self.label_priceIn_2.setAlignment(QtCore.Qt.AlignCenter)
         self.label_priceIn_2.setObjectName("label_priceIn_2")
-        self.checkBox_1 = QtWidgets.QCheckBox(Comparison)
-        self.checkBox_1.setGeometry(QtCore.QRect(240, 550, 21, 20))
-        self.checkBox_1.setText("")
-        self.checkBox_1.setObjectName("checkBox_1")
-        self.checkBox_2 = QtWidgets.QCheckBox(Comparison)
-        self.checkBox_2.setGeometry(QtCore.QRect(390, 550, 21, 20))
-        self.checkBox_2.setText("")
-        self.checkBox_2.setObjectName("checkBox_2")
 
-        self.retranslateUi(Comparison)
-        QtCore.QMetaObject.connectSlotsByName(Comparison)
+        self.pushButton_red1 = QtWidgets.QPushButton(Comparison)
+        self.pushButton_red1.setGeometry(QtCore.QRect(50, 550, 30, 30))
+        #self.pushButton_red.setStyleSheet("background-color : yellow")
+
+
+        #self.pushButton_green = QtWidgets.QPushButton(Comparison)
+        #self.pushButton_green.setGeometry(QtCore.QRect(150, 500, 30, 30))
+        #self.pushButton_green.setStyleSheet("background-color: rgb(8, 204, 93)")
+
+        #self.pushButton_grey = QtWidgets.QPushButton(Comparison)
+        #self.pushButton_grey.setGeometry(QtCore.QRect(250, 500, 30, 30))
+        #self.pushButton_grey.setStyleSheet("background-color: rgb(99, 89, 86)")
 
         self.label_title_1.setWordWrap(True)
         self.label_title_2.setWordWrap(True)
         self.label_label_1.setWordWrap(True)
         self.label_label_2.setWordWrap(True)
 
+        self.retranslateUi(Comparison)
+        QtCore.QMetaObject.connectSlotsByName(Comparison)
+
+    def nothing(self):
+        pass
+
     def setColors(self):
+
+        if float(self.label_rating_1.text()[:-1]) > float(self.label_rating_2.text()[:-1]):
+            self.label_rating_1.setStyleSheet("background-color: rgb(8, 204, 93)")
+            self.label_rating_2.setStyleSheet("background-color: rgb(189, 53, 0)")
+        elif float(self.label_rating_1.text()[:-1]) < float(self.label_rating_2.text()[:-1]):
+            self.label_rating_1.setStyleSheet("background-color: rgb(189, 53, 0)")
+            self.label_rating_2.setStyleSheet("background-color: rgb(8, 204, 93)")
+        else:
+            self.label_rating_1.setStyleSheet("background-color: rgb(99, 89, 86)")
+            self.label_rating_2.setStyleSheet("background-color: rgb(99, 89, 86)")
 
         if int(self.label_have_1.text()) > int(self.label_have_2.text()):
             self.label_have_1.setStyleSheet("background-color: rgb(8, 204, 93)")
@@ -208,9 +225,30 @@ class Ui_Comparison(QtWidgets.QMainWindow):
             self.label_want_2.setStyleSheet("background-color: rgb(99, 89, 86)")
             self.label_want_1.setStyleSheet("background-color: rgb(99, 89, 86)")
 
-    def setCurrency(self):
-        currency = self.currencyComboBox
-        price = self.priceComboBox
+        if self.price1 < self.price2:
+            self.label_priceIn_1.setStyleSheet("background-color: rgb(8, 204, 93)")
+            self.label_price_1.setStyleSheet("background-color: rgb(8, 204, 93)")
+            self.label_priceIn_2.setStyleSheet("background-color: rgb(189, 53, 0)")
+            self.label_price_2.setStyleSheet("background-color: rgb(189, 53, 0)")
+        elif self.price1 > self.price2:
+            self.label_priceIn_2.setStyleSheet("background-color: rgb(8, 204, 93)")
+            self.label_price_2.setStyleSheet("background-color: rgb(8, 204, 93)")
+            self.label_priceIn_1.setStyleSheet("background-color: rgb(189, 53, 0)")
+            self.label_price_1.setStyleSheet("background-color: rgb(189, 53, 0)")
+        else:
+            self.label_priceIn_2.setStyleSheet("background-color: rgb(99, 89, 86)")
+            self.label_price_2.setStyleSheet("background-color: rgb(99, 89, 86)")
+            self.label_priceIn_1.setStyleSheet("background-color: rgb(99, 89, 86)")
+            self.label_price_1.setStyleSheet("background-color: rgb(99, 89, 86)")
+
+    def changeCurrency(self):
+        x = self.setCurrency(windowM.Ui_MainWindow.elements[0][3], windowM.Ui_MainWindow.elements[0][2], 1)
+        y = self.setCurrency(windowM.Ui_MainWindow.elements[1][3], windowM.Ui_MainWindow.elements[1][2], 2)
+        self.label_priceIn_1.setText(f"{x}")
+        self.label_priceIn_2.setText(f"{y}")
+        self.setColors()
+
+    def setCurrency(self, currency, price, i):
         if currency == '$':
             price = price
         elif currency == '¥':
@@ -268,7 +306,15 @@ class Ui_Comparison(QtWidgets.QMainWindow):
         else:
             print("Nowa waluta:" + price)
             price = 0
-        #self.label_price.setText(f"Price in {currency}: {round(price, 2)}")
+
+        if i == 1:
+            self.price1 = price
+        elif i == 2:
+            self.price2 = price
+        else:
+            print("Error!")
+
+        return str(round(price, 2))+ " " + str(currency)
 
     def retranslateUi(self, Comparison):
         _translate = QtCore.QCoreApplication.translate
@@ -279,11 +325,11 @@ class Ui_Comparison(QtWidgets.QMainWindow):
         self.label_have.setText(_translate("Comparison", "Have"))
         self.label_want.setText(_translate("Comparison", "Want"))
         self.label_price.setText(_translate("Comparison", "Price"))
-        self.label_1.setText(_translate("Comparison", "<- Remember ->"))
+        self.label_priceIn.setText(_translate("Comparison", "Price in $"))
         self.label_title_1.setText(_translate("Comparison", f"{windowM.Ui_MainWindow.elements[0][1]}"))
         self.label_title_2.setText(_translate("Comparison", f"{windowM.Ui_MainWindow.elements[1][1]}"))
-        self.label_label_1.setText(_translate("Comparison", f"{windowM.Ui_MainWindow.elements[0][2]}"))
-        self.label_label_2.setText(_translate("Comparison", f"{windowM.Ui_MainWindow.elements[1][2]}"))
+        self.label_label_1.setText(_translate("Comparison", f"{windowM.Ui_MainWindow.elements[0][4]}"))
+        self.label_label_2.setText(_translate("Comparison", f"{windowM.Ui_MainWindow.elements[1][4]}"))
         self.label_rating_1.setText(_translate("Comparison", f"{windowM.Ui_MainWindow.elements[0][5]}"))
         self.label_rating_2.setText(_translate("Comparison", f"{windowM.Ui_MainWindow.elements[1][5]}"))
         self.label_have_1.setText(_translate("Comparison", f"{windowM.Ui_MainWindow.elements[0][6]}"))
@@ -292,8 +338,11 @@ class Ui_Comparison(QtWidgets.QMainWindow):
         self.label_want_2.setText(_translate("Comparison", f"{windowM.Ui_MainWindow.elements[1][7]}"))
         self.label_price_1.setText(_translate("Comparison", f"{windowM.Ui_MainWindow.elements[0][2]}{windowM.Ui_MainWindow.elements[0][3]}"))
         self.label_price_2.setText(_translate("Comparison", f"{windowM.Ui_MainWindow.elements[1][2]}{windowM.Ui_MainWindow.elements[1][3]}"))
-        self.label_priceIn_1.setText(_translate("Comparison", "Comming soon"))
-        self.label_priceIn.setText(_translate("Comparison", "Price in $"))
-        self.label_priceIn_2.setText(_translate("Comparison", "TextLabel"))
+        x = self.setCurrency(windowM.Ui_MainWindow.elements[0][3], windowM.Ui_MainWindow.elements[0][2], 1)
+        y = self.setCurrency(windowM.Ui_MainWindow.elements[1][3], windowM.Ui_MainWindow.elements[1][2], 2)
+        self.label_priceIn_1.setText(_translate("Comparison", f"{x}"))
+        self.label_priceIn_2.setText(_translate("Comparison", f"{y}"))
+
+        self.pushButton_red1.setText(_translate("MainWindow", ""))
 
 
