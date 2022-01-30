@@ -8,8 +8,6 @@ class Ui_Info(QtWidgets.QMainWindow):
         self.setLabels(row)
         self.currencyComboBox = "$"
         self.priceComboBox = row[2]
-        self.element1 = None
-        self.element2 = None
 
     def setupUi(self, Info):
         Info.setObjectName("Info")

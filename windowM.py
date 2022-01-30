@@ -1,18 +1,18 @@
 # Damian Subzda
 # WCY19IJ3S1
 
-#TODO Możliwość dodania dwóch rzeczy do porównania (dodanie w osobnym okienku)
-
-import webbrowser
-
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QListWidgetItem, QApplication, QMessageBox
 
+import webbrowser
 import DataBaseConnection
+import comparison
 import info
-import element
+
 
 class Ui_MainWindow(QtWidgets.QMainWindow):
+
+    elements = list()
 
     def __init__(self, parent=None):
         super(Ui_MainWindow, self).__init__(parent)
@@ -59,9 +59,14 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.listWidgetElement.setObjectName("listWidgetElement")
 
         self.pushButton_Remove = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_Remove.setGeometry(QtCore.QRect(30, 255+24-3, 70, 31))
+        self.pushButton_Remove.setGeometry(QtCore.QRect(30+15, 276+40, 70, 31))
         self.pushButton_Remove.setObjectName("pushButton_Remove")
         self.pushButton_Remove.clicked.connect(self.delateElement)
+
+        self.pushButton_Compare = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_Compare.setGeometry(QtCore.QRect(30, 276, 100, 31))
+        self.pushButton_Compare.setObjectName("pushButton_Compare")
+        self.pushButton_Compare.clicked.connect(self.openCompareUi)
 
         self.pushButton_Copy = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_Copy.setGeometry(QtCore.QRect(630, 490, 131, 31))
@@ -107,27 +112,49 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-    def addElement(self):
-        #self.listWidgetElement.addItem("Hello")
-        x = self.listWidget.selectedItems()
-        if self.listWidgetElement.count() != 2:
-            if len(x) == 0:
-                pass
-            else:
-                for y in x:
-                    x = y.text()
-                id = int(self.getID(x))
-                row = DataBaseConnection.DataBaseConnector.getRecordByID(DataBaseConnection.DataBaseConnector, id)
-                temp2 = "ID: " + str(row[0]) + "\tTitle:  " + str(row[1])
-                self.listWidgetElement.addItem(temp2)
+    def openCompareUi(self):
+        if len(self.elements) == 2:
+            popWin = comparison.Ui_Comparison()
+            popWin.show()
+            self.popups.append(popWin)
         else:
-            QMessageBox.about(self, "Error", "Max 2 elements!")
+            QMessageBox.about(self, "Error", "Pick 2 elements !")
 
-        #TODO Zrobić żeby nie można było dodać duplikatów
+    def addElement(self):
+
+        x = self.listWidget.selectedItems()
+        if x != []:
+            for y in x:
+                x = y.text()
+            id = int(self.getID(x))
+            row = DataBaseConnection.DataBaseConnector.getRecordByID(DataBaseConnection.DataBaseConnector, id)
+            temp2 =  str(row[0])+ ":  Title: " + str(row[1]) + "Price: "+ str(row[2]) + str(row[3])
+
+            input = temp2
+            books = []
+
+            for i in range(self.listWidgetElement.count()):
+                book = self.listWidgetElement.item(i).text()
+                books.append(book)
+
+            if input in books:
+                print("Already exists")
+            else:
+                if self.listWidgetElement.count() != 2:
+                    if len(x) == 0:
+                        pass
+                    else:
+                        self.listWidgetElement.addItem(temp2)
+                        temp = DataBaseConnection.DataBaseConnector.getRecordByID(DataBaseConnection.DataBaseConnector, row[0])
+                        self.elements.append(temp)
+
+                else:
+                    QMessageBox.about(self, "Error", "Max 2 elements!")
 
     def showInfo(self):
 
         x = self.listWidget.selectedItems()
+        print(x)
         if len(x)==0:
             pass
         else:
@@ -184,8 +211,16 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.listWidget.clear()
 
     def delateElement(self):
-        for item in self.listWidgetElement.selectedItems():
-            self.listWidgetElement.takeItem(self.listWidgetElement.row(item))
+        x = self.listWidgetElement.selectedItems()
+        if x != []:
+            for y in x:
+                x = y.text()
+            id = int(self.getID(x))
+            for item in self.elements:
+                if id == item[0]:
+                    self.elements.remove(item)
+            for item in self.listWidgetElement.selectedItems():
+                self.listWidgetElement.takeItem(self.listWidgetElement.row(item))
 
     def openBrowser(self):
         x = self.listWidget.selectedItems()
@@ -215,4 +250,5 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.pushButton_Add.setText(_translate("MainWindow", "Add"))
         self.pushButton_Remove.setText(_translate("MainWindow", "Remove"))
         self.label2.setText(_translate("MainWindow", "Search in database:"))
+        self.pushButton_Compare.setText(_translate("MainWindow", "Compare"))
 
