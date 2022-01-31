@@ -251,4 +251,3 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.pushButton_Remove.setText(_translate("MainWindow", "Remove"))
         self.label2.setText(_translate("MainWindow", "Search in database:"))
         self.pushButton_Compare.setText(_translate("MainWindow", "Compare"))
-

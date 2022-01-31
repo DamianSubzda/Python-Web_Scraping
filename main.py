@@ -18,14 +18,3 @@ ui = Ui_MainWindow()
 ui.setup(MainWindow)
 MainWindow.show()
 sys.exit(close())
-
-
-
-
-
-
-
-
-
-
-

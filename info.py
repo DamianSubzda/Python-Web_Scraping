@@ -5,7 +5,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 class Ui_Info(QtWidgets.QMainWindow):
 
-    def __init__(self,row, parent=None):
+    def __init__(self, row, parent=None):
         super(Ui_Info, self).__init__(parent)
         self.setupUi(self)
         self.setLabels(row)

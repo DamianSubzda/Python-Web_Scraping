@@ -174,21 +174,18 @@ class Ui_Comparison(QtWidgets.QMainWindow):
         self.pushButton_green.setStyleSheet("background-color: rgb(8, 204, 93)")
         self.green_label = QtWidgets.QLabel(Comparison)
         self.green_label.setGeometry(QtCore.QRect(50+35, 550, 80, 30))
-        #self.green_label.setStyleSheet("background-color: rgb(8, 204, 93)")
 
         self.pushButton_red = QtWidgets.QLabel(Comparison)
         self.pushButton_red.setGeometry(QtCore.QRect(50+150, 550, 30, 30))
         self.pushButton_red.setStyleSheet("background-color : rgb(189, 53, 0)")
         self.red_label = QtWidgets.QLabel(Comparison)
         self.red_label.setGeometry(QtCore.QRect(50 + 150 +35, 550, 80, 30))
-        #self.red_label.setStyleSheet("background-color : rgb(189, 53, 0)")
 
         self.pushButton_grey = QtWidgets.QLabel(Comparison)
         self.pushButton_grey.setGeometry(QtCore.QRect(50+150+150, 550, 30, 30))
         self.pushButton_grey.setStyleSheet("background-color: rgb(99, 89, 86)")
         self.grey_label = QtWidgets.QLabel(Comparison)
         self.grey_label.setGeometry(QtCore.QRect(50 + 150 + 150 +35, 550, 80, 30))
-        #self.grey_label.setStyleSheet("background-color: rgb(99, 89, 86)")
 
         self.label_title_1.setWordWrap(True)
         self.label_title_2.setWordWrap(True)
@@ -353,5 +350,3 @@ class Ui_Comparison(QtWidgets.QMainWindow):
         self.green_label.setText(_translate("MainWindow", "- better"))
         self.red_label.setText(_translate("MainWindow", "- worse"))
         self.grey_label.setText(_translate("MainWindow", "- same"))
-
-

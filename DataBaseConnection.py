@@ -76,10 +76,8 @@ class DataBaseConnector:
             cursor.execute(
                 '''CREATE TABLE dane (id INTEGER,title TEXT,price REAL,currency TEXT, label TEXT, star_rating TEXT, have INTEGER, want INTEGER, href TEXT)''')
             quit()
-
         cursor.execute('''DELETE FROM dane''')
 
-        # Przechodzi po wszystkich stronach
         x = True
         i = 1
         while x == True:
