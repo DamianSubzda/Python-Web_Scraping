@@ -1,5 +1,6 @@
 # Damian Subzda
 # WCY19IJ3S1
+
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from windowM import Ui_MainWindow

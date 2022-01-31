@@ -8,7 +8,7 @@ import sqlite3
 from sys import argv
 
 
-class DataBaseConnector():
+class DataBaseConnector:
     idOfItems = 0
 
     def __init__(self, idOfItems):

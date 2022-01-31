@@ -1,3 +1,6 @@
+# Damian Subzda
+# WCY19IJ3S1
+
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 class Ui_Info(QtWidgets.QMainWindow):

@@ -169,18 +169,26 @@ class Ui_Comparison(QtWidgets.QMainWindow):
         self.label_priceIn_2.setAlignment(QtCore.Qt.AlignCenter)
         self.label_priceIn_2.setObjectName("label_priceIn_2")
 
-        self.pushButton_red1 = QtWidgets.QPushButton(Comparison)
-        self.pushButton_red1.setGeometry(QtCore.QRect(50, 550, 30, 30))
-        #self.pushButton_red.setStyleSheet("background-color : yellow")
+        self.pushButton_green = QtWidgets.QLabel(Comparison)
+        self.pushButton_green.setGeometry(QtCore.QRect(50, 550, 30, 30))
+        self.pushButton_green.setStyleSheet("background-color: rgb(8, 204, 93)")
+        self.green_label = QtWidgets.QLabel(Comparison)
+        self.green_label.setGeometry(QtCore.QRect(50+35, 550, 80, 30))
+        #self.green_label.setStyleSheet("background-color: rgb(8, 204, 93)")
 
+        self.pushButton_red = QtWidgets.QLabel(Comparison)
+        self.pushButton_red.setGeometry(QtCore.QRect(50+150, 550, 30, 30))
+        self.pushButton_red.setStyleSheet("background-color : rgb(189, 53, 0)")
+        self.red_label = QtWidgets.QLabel(Comparison)
+        self.red_label.setGeometry(QtCore.QRect(50 + 150 +35, 550, 80, 30))
+        #self.red_label.setStyleSheet("background-color : rgb(189, 53, 0)")
 
-        #self.pushButton_green = QtWidgets.QPushButton(Comparison)
-        #self.pushButton_green.setGeometry(QtCore.QRect(150, 500, 30, 30))
-        #self.pushButton_green.setStyleSheet("background-color: rgb(8, 204, 93)")
-
-        #self.pushButton_grey = QtWidgets.QPushButton(Comparison)
-        #self.pushButton_grey.setGeometry(QtCore.QRect(250, 500, 30, 30))
-        #self.pushButton_grey.setStyleSheet("background-color: rgb(99, 89, 86)")
+        self.pushButton_grey = QtWidgets.QLabel(Comparison)
+        self.pushButton_grey.setGeometry(QtCore.QRect(50+150+150, 550, 30, 30))
+        self.pushButton_grey.setStyleSheet("background-color: rgb(99, 89, 86)")
+        self.grey_label = QtWidgets.QLabel(Comparison)
+        self.grey_label.setGeometry(QtCore.QRect(50 + 150 + 150 +35, 550, 80, 30))
+        #self.grey_label.setStyleSheet("background-color: rgb(99, 89, 86)")
 
         self.label_title_1.setWordWrap(True)
         self.label_title_2.setWordWrap(True)
@@ -189,9 +197,6 @@ class Ui_Comparison(QtWidgets.QMainWindow):
 
         self.retranslateUi(Comparison)
         QtCore.QMetaObject.connectSlotsByName(Comparison)
-
-    def nothing(self):
-        pass
 
     def setColors(self):
 
@@ -246,6 +251,7 @@ class Ui_Comparison(QtWidgets.QMainWindow):
         y = self.setCurrency(windowM.Ui_MainWindow.elements[1][3], windowM.Ui_MainWindow.elements[1][2], 2)
         self.label_priceIn_1.setText(f"{x}")
         self.label_priceIn_2.setText(f"{y}")
+        self.label_priceIn.setText(f"Price in {self.comboBox.currentText()}")
         self.setColors()
 
     def setCurrency(self, currency, price, i):
@@ -326,8 +332,8 @@ class Ui_Comparison(QtWidgets.QMainWindow):
         self.label_want.setText(_translate("Comparison", "Want"))
         self.label_price.setText(_translate("Comparison", "Price"))
         self.label_priceIn.setText(_translate("Comparison", "Price in $"))
-        self.label_title_1.setText(_translate("Comparison", f"{windowM.Ui_MainWindow.elements[0][1]}"))
-        self.label_title_2.setText(_translate("Comparison", f"{windowM.Ui_MainWindow.elements[1][1]}"))
+        self.label_title_1.setText(_translate("Comparison", f"{windowM.Ui_MainWindow.elements[0][0]}: {windowM.Ui_MainWindow.elements[0][1]}"))
+        self.label_title_2.setText(_translate("Comparison", f"{windowM.Ui_MainWindow.elements[1][0]}: {windowM.Ui_MainWindow.elements[1][1]}"))
         self.label_label_1.setText(_translate("Comparison", f"{windowM.Ui_MainWindow.elements[0][4]}"))
         self.label_label_2.setText(_translate("Comparison", f"{windowM.Ui_MainWindow.elements[1][4]}"))
         self.label_rating_1.setText(_translate("Comparison", f"{windowM.Ui_MainWindow.elements[0][5]}"))
@@ -343,6 +349,9 @@ class Ui_Comparison(QtWidgets.QMainWindow):
         self.label_priceIn_1.setText(_translate("Comparison", f"{x}"))
         self.label_priceIn_2.setText(_translate("Comparison", f"{y}"))
 
-        self.pushButton_red1.setText(_translate("MainWindow", ""))
+        self.pushButton_green.setText(_translate("MainWindow", ""))
+        self.green_label.setText(_translate("MainWindow", "- better"))
+        self.red_label.setText(_translate("MainWindow", "- worse"))
+        self.grey_label.setText(_translate("MainWindow", "- same"))
 
 
